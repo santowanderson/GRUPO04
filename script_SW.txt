@@ -1,0 +1,39 @@
+enable
+configure terminal
+hostname CISCOSW-OSL04
+enable secret Senai@132
+service password-encryption
+ip domain-name grupo04.local
+crypto key generate rsa general-keys modulus 1024
+username grupo04 privilege 15 secret Senai@132
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 10
+exit
+vlan 10
+name Rede_clientes
+vlan 20
+name Rede_servers
+exit
+interface f0/1
+switchport mode access
+switchport access vlan 10
+exit
+interface f0/2
+switchport mode access
+switchport access vlan 20
+exit
+interface g0/1
+switchport mode access
+switchport access vlan 10
+exit
+interface g0/2
+switchport mode access
+switchport access vlan 20
+exit
+interface vlan 20
+description INTERFACE DE GERENCIAMENTO
+ip address 172.31.104.254 255.255.255.0
+no shutdown
+do wr

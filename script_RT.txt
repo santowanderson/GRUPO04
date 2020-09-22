@@ -1,0 +1,36 @@
+enable
+configure terminal
+hostname CISCORT-RIO04
+enable secret Senai@132
+service password-encryption
+ip domain-name grupo04.local
+crypto key generate rsa general-keys modulus 1024
+username grupo04 privilege 15 secret Senai@132
+login block-for 180 attempts 3 within 60
+line console 0
+login local
+exit
+line vty 0 15
+transport input ssh
+exec-timeout 5
+login local
+exit
+interface g0/1
+ip address 192.168.132.104 255.255.255.0
+description REDE ESCOLA
+no shutdown
+exit
+interface g0/0
+ip address 172.30.104.2 255.255.255.0
+description REDE FIREWALL
+no shutdown
+exit
+router ospf 1
+passive-interface default
+no passive-interface g0/1
+network 192.168.132.101 0.0.0.255 area 0
+network 192.168.132.102 0.0.0.255 area 0
+network 192.168.132.103 0.0.0.255 area 0
+network 192.168.132.105 0.0.0.255 area 0
+exit
+do wr

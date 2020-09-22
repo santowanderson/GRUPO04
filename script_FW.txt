@@ -1,0 +1,35 @@
+enable
+configure terminal
+hostname CISCOFW-BERLIM04
+interface g1/4
+ip address 10.10.104.1 255.255.255.0
+nameif inside
+description REDE CLIENTES
+exit
+interface g1/2
+ip address 172.30.104.1 255.255.255.0
+nameif outside
+description REDE ROUTER-FIREWALL
+exit
+interface g1/3
+ip address 172.31.104.1 255.255.255.0
+nameif dmz
+security-level 50
+description REDE SERVIDORES
+exit
+access-list outside_access_in extended permit ip any any
+access-list outside_access_in extended permit tcp any any eq 22
+access-list global_access extended permit ip any any
+access-list inside_access_in extended permit ip any any
+access-list inside_access_in extended permit tcp any any eq ftp
+access-list inside_access_in extended permit tcp any any eq 22
+access-list dmz_access_in extended permit ip any any
+access-list dmz_access_in extended permit tcp any any eq ftp
+access-list dmz_access_in extended permit tcp any any eq 22
+access-list outside_access_in extended permit tcp any any eq 80
+access-list dmz_access_in extended permit tcp any any eq 80
+access-list inside_access_in extended permit tcp any any eq 80
+access-group dmz_access_in in interface dmz
+access-group outside_access_in in interface outside
+access-group inside_access_in in interface inside
+do wr
